@@ -15,24 +15,125 @@ class LoginViewController: UIViewController {
         static let backgroundColor: UIColor = UIColor(hue: 0.5389, saturation: 1, brightness: 0.92, alpha: 1.0)
         static let invalidEmailTitle = "Invalid username or password"
         static let invalidEmailMessage = "Please try again"
+        
+        static let loginLabel = "Login View Controller";
+        static let padding : CGFloat = 10;
+        static let neighborPadding : CGFloat = 2;
     }
-
-    // TODO: instantiate the views needed for your project
+    
+    class LoginTitle : UILabel {
+        override init (frame : CGRect) {
+            super.init(frame:frame);
+            text = Constants.loginLabel;
+            textColor! = UIColor.white;
+            numberOfLines = 2;
+            font = UIFont.init(name: "Helvetica", size: 70);
+            textAlignment = .center;
+            adjustsFontSizeToFitWidth = true;
+        }
+        required init?(coder aDecoder: NSCoder) {
+            super.init(coder:aDecoder);
+        }
+    }
+    class AccountText : UITextField {
+        override init (frame : CGRect) {
+            super.init(frame:frame);
+            placeholder = "berkeley.edu account";
+            font = UIFont.init(name: "Helvetica", size: 24);
+            adjustsFontSizeToFitWidth = true;
+        }
+        required init?(coder aDecoder: NSCoder) {
+            super.init(coder:aDecoder);
+        }
+    }
+    class PasswordText : UITextField {
+        override init (frame : CGRect) {
+            super.init(frame:frame);
+            placeholder = "Password";
+            font = UIFont.init(name: "Helvetica", size: 24)
+            adjustsFontSizeToFitWidth = true;
+        }
+        required init?(coder aDecoder: NSCoder) {
+            super.init(coder:aDecoder);
+        }
+    }
+    class LoginButton : UIButton {
+        let parent : LoginViewController;
+        init (frame : CGRect, parent : LoginViewController) {
+            self.parent = parent;
+            super.init(frame:frame);
+            backgroundColor = Constants.backgroundColor;
+            setTitle("Login", for: .normal);
+            titleLabel!.font = UIFont(name: "Helvetica", size: 24);
+            setTitleColor(UIColor.white, for : .normal);
+        }
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+            parent.loginButtonClick();
+            //sendActions(for: UIControlEvents.touchUpInside);
+        }
+    }
+    class LoginBox : UIView {
+        let parent : LoginViewController;
+        let accountText : AccountText;
+        let passwordText : PasswordText;
+        init (frame : CGRect, parent : LoginViewController) {
+            self.parent = parent;
+            let textHeight : CGFloat = (frame.height - Constants.padding*2 - Constants.neighborPadding*2)/3;
+            accountText = AccountText(frame : CGRect(x: Constants.padding,
+                                                     y: Constants.padding,
+                                                     width: frame.width - Constants.padding*2,
+                                                     height: textHeight));
+            passwordText = PasswordText(frame : CGRect(x: Constants.padding,
+                                                       y: Constants.padding + Constants.neighborPadding + textHeight,
+                                                       width: frame.width - Constants.padding*2,
+                                                       height: textHeight));
+            super.init(frame:frame);
+            backgroundColor = UIColor.white;
+            addSubview(accountText);
+            addSubview(passwordText);
+            addSubview(LoginButton(frame : CGRect(x: Constants.padding + (frame.width - Constants.padding*2)/6,
+                                                  y: Constants.padding + Constants.neighborPadding*2 + textHeight*2,
+                                                  width: 2*(frame.width - Constants.padding*2)/3,
+                                                  height: textHeight), parent : parent));
+        }
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Constants.backgroundColor
-        
-        // TODO: Add your views either as subviews of `view` or subviews of each other using `addSubview`
-        
-        // TODO: layout your views using frames or AutoLayout
+        let firstHeight : CGFloat = (view.frame.height - Constants.padding * 4 - Constants.neighborPadding * 10)/3;
+        let loginTitle : LoginTitle = LoginTitle(frame : CGRect(
+            x: view.frame.minX + Constants.padding,
+            y: view.frame.minY + Constants.padding*3,
+            width: view.frame.width - Constants.padding * 2,
+            height: firstHeight));
+        let loginBox : LoginBox = LoginBox(frame : CGRect(
+            x: view.frame.minX + Constants.padding,
+            y: view.frame.minY + firstHeight + Constants.neighborPadding * 10,
+            width: view.frame.width - Constants.padding * 2,
+            height: firstHeight), parent : self);
+        view.addSubview(loginTitle);
+        view.addSubview(loginBox);
+        self.loginTitle = loginTitle;
+        self.loginBox = loginBox;
     }
     
-    // TODO: create an IBAction for your login button
+    var loginTitle : LoginTitle?
+    var loginBox : LoginBox?;
     
-    
-    
-    
+    func loginButtonClick () {
+        if (loginTitle != nil && loginBox != nil) {
+            let acctTxt = loginBox!.accountText.text;
+            let pswdTxt = loginBox!.passwordText.text;
+            authenticateUser(username: acctTxt, password: pswdTxt);
+        }
+    }
     
     /// YOU DO NOT NEED TO MODIFY ANY OF THE CODE BELOW (but you will want to use `authenticateUser` at some point)
     

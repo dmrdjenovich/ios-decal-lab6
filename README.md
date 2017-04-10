@@ -98,6 +98,9 @@ If you instead decide to implement your layout with **AutoLayout** (`NSLayoutAnc
 	// sets the width of view 1 equal to the width of view 2 + constant
 	view1.widthAnchor.constraint(equalTo: view2.widthAnchor, constant: someCGFloat) 
 	
+	// sets the width of view 1 equal to the width of view 2 + constant
+	view1.widthAnchor.constraint(equalTo: view2.widthAnchor, constant: someCGFloat)
+	
 	// Tells Xcode not to add autoresizing constraints (if you get NSLayout Conflicting Constraints 
 	// warning that includes an "AutoResizing" Constraint, it's probably because you have not 
 	// set this property to false for your view
